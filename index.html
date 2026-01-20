@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Yuvraj Chalia - Yuvrau18</title>
+
+  <!-- Faster Google Fonts loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000; color: #fff; overflow-x: hidden; scroll-behavior: smooth;
+    }
+
+    /* Background Video */
+    .video-background {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: -2; object-fit: cover;
+    }
+    .video-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: -1;
+    }
+
+    /* Audio Control */
+    .audio-control {
+      position: fixed; top: 30px; right: 30px; z-index: 1000;
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px; padding: 12px 20px; cursor: pointer;
+      transition: all 0.3s ease; font-size: 14px; color: #fff;
+    }
+    .audio-control:hover { background: rgba(255,255,255,0.2); }
+
+    /* Hero */
+    .hero {
+      height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; position: relative;
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 600; letter-spacing: 3px; margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff, #888);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-transform: uppercase;
+    }
+    .hero-subtitle {
+      font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 300; letter-spacing: 2px; margin-bottom: 2rem; color: #ccc;
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 2vw, 1.3rem); font-weight: 400; letter-spacing: 1px; margin-bottom: 3rem; color: #00ff88;
+    }
+
+    /* Hero Socials */
+    .hero-social { display: flex; gap: 20px; margin-bottom: 3rem; }
+    .hero-social a {
+      width: 60px; height: 60px; background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: #fff; text-decoration: none; transition: all 0.3s ease;
+      outline: none;
+    }
+    .hero-social a:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); }
+    .hero-social a:focus-visible { box-shadow: 0 0 0 3px rgba(0,255,136,0.5); }
+
+    .scroll-indicator {
+      position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0.7;
+      animation: bounce 2s infinite; cursor: pointer;
+    }
+    .scroll-indicator span { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
+    .scroll-arrow { width: 20px; height: 20px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(45deg); }
+    @keyframes bounce {
+      0%,20%,50%,80%,100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-10px); }
+      60% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* Content */
+    .content { position: relative; z-index: 10; min-height: 100vh; padding: 100px 0; }
+    .section { max-width: 900px; margin: 0 auto 100px auto; padding: 0 20px; }
+    .card {
+      background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+      padding: 40px; margin: 40px 0; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      transition: transform 0.1s linear;
+    }
+    .section-title { font-size: 2.5rem; font-weight: 200; margin-bottom: 30px; text-align: center; color: #fff; }
+
+    /* About */
+    .about-container { display: grid; grid-template-columns: 250px 1fr; gap: 40px; align-items: start; }
+    .photo-container {
+      position: relative; width: 250px; height: 250px; border-radius: 20px; overflow: hidden;
+      background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+    }
+    .photo-container:hover { border-color: #00ff88; background: rgba(0,255,136,0.1); }
+    .photo-container img { width: 100%; height: 100%; object-fit: cover; border-radius: 18px; }
+    .about-content { display: flex; flex-direction: column; gap: 30px; }
+    .about-bio { font-size: 16px; line-height: 1.6; color: #e0e0e0; }
+    .about-info { font-family: 'Courier New', monospace; font-size: 16px; line-height: 2; color: #e0e0e0; }
+    .about-info div { margin-bottom: 10px; }
+    .about-info span { color: #00ff88; }
+
+    /* Projects */
+    .project-list { list-style: none; display: flex; flex-direction: column; gap: 30px; }
+    .project-item { padding: 30px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .project-item:last-child { border-bottom: none; }
+    .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .project-title { font-size: 18px; font-weight: 600; color: #fff; }
+    .project-status { padding: 6px 16px; border-radius: 20px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; flex-shrink: 0; }
+    .project-status.progress { background: rgba(255,193,7,0.2); color: #ffc107; }
+    .project-description { font-size: 14px; line-height: 1.6; color: #ccc; }
+
+    /* Learning */
+    .learning-list { display: flex; flex-direction: column; gap: 20px; }
+    .learning-item { font-size: 18px; color: #e0e0e0; padding: 20px 0; border-left: 3px solid #00ff88; padding-left: 20px; }
+
+    /* Contact form */
+    .contact-form { display: grid; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { color: #ccc; font-size: 14px; font-weight: 500; }
+    .form-group input, .form-group textarea {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px; padding: 15px; color: #fff; font-size: 16px; transition: all 0.3s ease;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none; border-color: #00ff88; background: rgba(255,255,255,0.15);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .submit-btn {
+      background: linear-gradient(45deg, #00ff88, #00cc6a); border: none; border-radius: 10px;
+      padding: 15px 30px; color: #000; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,255,136,0.3); }
+
+    /* Footer */
+    .footer {
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding: 60px 0 40px; margin-top: 100px;
+    }
+    .footer-content {
+      max-width: 1200px; margin: 0 auto; padding: 0 20px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;
+    }
+    .footer-section h3 { color: #00ff88; font-size: 18px; margin-bottom: 20px; font-weight: 600; }
+    .footer-section p, .footer-section a { color: #ccc; text-decoration: none; line-height: 1.6; margin-bottom: 10px; display: block; }
+    .footer-section a:hover { color: #00ff88; }
+    .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); color: #888; font-size: 14px; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-indicator { animation: none; }
+      .card { transition: none; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+      .about-container { grid-template-columns: 1fr; text-align: center; }
+      .photo-container { margin: 0 auto; }
+      .card { padding: 30px 20px; margin: 20px 10px; }
+      .section { padding: 0 10px; }
+      .project-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .hero-social { gap: 15px; }
+      .hero-social a { width: 50px; height: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video (kept as bg.mp4) -->
+  <video class="video-background" autoplay muted loop playsinline poster="poster.jpg">
+    <source src="bg.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div class="video-overlay"></div>
+
+  <!-- Audio Control -->
+  <div class="audio-control" onclick="toggleAudio()" aria-live="polite" role="button">
+    <span id="audio-status">🔇 Sound Off</span>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 class="hero-title">Sylphiette</h1>
+    <h2 class="hero-subtitle">a.k.a SylphieChan</h2>
+    <p class="hero-tagline">Growth doesn’t always look like success — sometimes it looks like patience.</p>
+
+    <!-- Socials -->
+    <div class="hero-social" aria-label="Social links">
+      <a href="https://github.com/SylphieChan" target="_blank" title="GitHub" aria-label="GitHub">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+      </a>
+      <a href="https://www.linkedin.com/in/sylphie-chan-a49a9327b/" target="_blank" title="LinkedIn" aria-label="LinkedIn">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+      <a href="https://discord.com/users" target="_blank" title="Discord: the.mit" aria-label="Discord username the.mit">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0002 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="scroll-indicator" onclick="scrollToContent()">
+      <span>Scroll Down</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- About Section -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <h2 class="section-title" id="about-title">About Me</h2>
+      <div class="card">
+        <div class="about-container">
+          <div class="photo-container">
+            <!-- Replace me.png with your actual image filename when you upload -->
+            <img src="me.png" alt="Profile photo of Sylphiette (SylphieChan)"/>
+          </div>
+          <div class="about-content">
+            <div class="about-bio">
+              I like to make websites and codes  - also I love watching anime.
+            </div>
+            <div class="about-info">
+              <div><span>Name</span> : Yuvraj Chalia</div>
+              <div><span>E-name</span> : Yuvrau18</div>
+              <div><span>Age</span> : 999 YO</div>
+              <div><span>Location</span> : Home</div>
+              <div><span>Language</span> : English</div>
+              <div><span>Key Skills</span> : javaScript, Python, watching anime</div>
+              <div><span>Email</span> : <a href="mailto:thumping18@gmailcom" style="color:#00ff88;">thumping18@gmail.com</a></div>
+              <div><span>Discord</span> : yuvrau18</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section" id="projects" aria-labelledby="projects-title">
+      <h2 class="section-title" id="projects-title">Projects</h2>
+      <div class="card">
+        <ul class="project-list">
+          <li class="project-item">
+            <div class="project-header">
+              <span class="project-title">Learning Programming</span>
+              <span class="project-status progress">Completed</span>
+            </div>
+            <div class="project-description">
+              i hope web developing never end ;-;
+            </div>
+          </li>
+
+          <li class="project-item">
+            <div class="project-header">
+              <span class="project-title">E-commerce startup</span>
+              <span class="project-status progress">Canceled</span>
+            </div>
+            <div class="project-description">
+              A lightweight, local-focused e-commerce system targeting small towns like Minchinabad. It connects nearby shopkeepers with online customers, offers low-cost delivery, and features a basic reward system. Not built like big platforms — it's minimal, fast, and simple.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Currently Learning Section -->
+    <section class="section" id="learning" aria-labelledby="learning-title">
+      <h2 class="section-title" id="learning-title">Currently Doing</h2>
+      <div class="card">
+        <div class="learning-list">
+          <div class="learning-item">HTML Coding</div>
+          <div class="learning-item">Preparing for another Project</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section (Netlify Form) -->
+    <section class="section" id="contact" aria-labelledby="contact-title">
+      <h2 class="section-title" id="contact-title">Contact Me</h2>
+      <div class="card">
+        <!-- Netlify form -->
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
+          <input type="hidden" name="form-name" value="contact"/>
+          <p style="display:none;">
+            <label>Don’t fill this out if you're human: <input name="bot-field"/></label>
+          </p>
+
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required/>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Your Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required/>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" minlength="3" required/>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" minlength="10" placeholder="Let's grab some coffee and swap stories..." required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+
+        <!-- Alternate contact -->
+        <div class="about-info" style="margin-top:20px;">
+          <div><span>Email</span> : <a href="mailto:thumping18@gmail.com" style="color:#00ff88;">thumping18@gmail.com</a></div>
+          <div><span>Discord</span> : yuvrau18</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Yuvrau18</h3>
+        <p>A developer focused on practical learning and building real-world projects.</p>
+        <p>📍 Cambridge</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#learning">Learning</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-section">
+        <h3>Connect</h3>
+        <a href="mailto:thumping18@gmail.com">Gmail</a>
+        <a title="Discord: yuvrau18">Discord: yuvrau18</a>
+        <a href="https://github.com/yuvrau" target="_blank">GitHub</a>
+      </div>
+      <div class="footer-section">
+        <h3>Currently</h3>
+        <p>🈵 Learning HTML Coding</p>
+        <p>🎓 Preparing for another Project</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Yuvraj Chalia (Yuvrau18). Made with ❤️ and lots of Love.</p>
+    </div>
+  </footer>
+
+  <!-- Audio -->
+  <audio id="rainAudio" loop>
+    <source src="rain.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Success Modal for Netlify form -->
+  <div id="form-success" style="
+    position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.6); z-index: 2000;">
+    <div style="
+      background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2); border-radius: 16px;
+      padding: 24px; max-width: 420px; text-align: center;">
+      <h3 style="margin-bottom: 10px; color: #00ff88;">Message sent</h3>
+      <p style="color:#e0e0e0; margin-bottom:16px;">Thanks for reaching out! I’ll get back to you soon.</p>
+      <button id="success-close" class="submit-btn" type="button">Close</button>
+    </div>
+  </div>
+
+  <!-- Transparent Eye Icon Visitor Counter -->
+  <div id="visitor-eye" title="Visitors: 0" style="
+    position: fixed; bottom: 12px; right: 12px;
+    background: rgba(255,255,255,0.05); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px; padding: 4px 10px; display: flex; align-items: center;
+    font-size: 13px; color: white; font-family: sans-serif; z-index: 999;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+      <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path>
+      <circle cx="12" cy="12" r="3"></circle>
+    </svg>
+    <span id="visit-count">...</span>
+  </div>
+
+  <script>
+    // Audio toggle
+    let audioEnabled = false;
+    const audio = document.getElementById('rainAudio');
+    const audioStatus = document.getElementById('audio-status');
+    function toggleAudio() {
+      if (audioEnabled) {
+        audio.pause();
+        audioStatus.textContent = '🔇 Sound Off';
+        audioEnabled = false;
+      } else {
+        audio.play().then(() => {
+          audioStatus.textContent = '🔊 Rain On';
+          audioEnabled = true;
+        }).catch(() => {
+          // Keep label as Sound Off if play fails
+        });
+      }
+    }
+
+    function scrollToContent() {
+      document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Background video fallback
+    const video = document.querySelector('.video-background');
+    video.addEventListener('error', () => {
+      document.body.style.background = 'linear-gradient(135deg, #0c0c0c, #1a1a1a)';
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Subtle tilt on mousemove (rAF throttled)
+    let rafId = null;
+    let lastEvent = null;
+    const cards = document.querySelectorAll('.card');
+    document.addEventListener('mousemove', (e) => {
+      lastEvent = e;
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        cards.forEach(card => {
+          const rect = card.getBoundingClientRect();
+          const x = lastEvent.clientX - rect.left;
+          const y = lastEvent.clientY - rect.top;
+          if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 50;
+            const rotateY = (centerX - x) / 50;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+          } else {
+            card.style.transform = '';
+          }
+        });
+        rafId = null;
+      });
+    });
+
+    // Visitor counter (Abacus)
+    window.onload = () => {
+      const namespace = 'wizmax-site';
+      const key = 'visits';
+      const url = `https://abacus.jasoncameron.dev/hit/${namespace}/${key}`;
+      const visitCountEl = document.getElementById("visit-count");
+      const eye = document.getElementById("visitor-eye");
+
+      fetch(url).then(res => {
+        if (!res.ok) throw new Error('Network error');
+        return res.json();
+      }).then(data => {
+        visitCountEl.innerText = data.value;
+        eye.title = `Visitors: ${data.value}`;
+      }).catch(err => {
+        console.error("Abacus API error:", err);
+        visitCountEl.innerText = "ERR";
+      });
+    };
+
+    // Netlify form AJAX submit -> show modal
+    const form = document.querySelector('form[data-netlify="true"]');
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        try {
+          const res = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams([...formData]).toString(),
+          });
+          if (res.ok) {
+            form.reset();
+            const modal = document.getElementById('form-success');
+            modal.style.display = 'flex';
+          } else {
+            alert('There was an issue submitting the form. Please try again.');
+          }
+        } catch (err) {
+          alert('Network error. Please try again later.');
+        }
+      });
+    }
+    document.getElementById('success-close')?.addEventListener('click', () => {
+      document.getElementById('form-success').style.display = 'none';
+    });
+  </script>
+</body>
+</html>
